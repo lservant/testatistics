@@ -37,14 +37,16 @@
         <div class="tabs-content" data-tabs-content="example-tabs" data-bind="foreach:ClassPeriods">
             <div class="tabs-panel" data-bind="css: {'is-active': $data == SelectedClassPeriod()}">
                 <input type="text" data-bind="textInput:Name" placeholder="Please enter a class name or period"></input>
-                <p>Type each question number missed, press enter after each entry.</p>
+                <p>Type each question number missed, press enter after each entry. If you make a mistake, click the number to remove it.</p>
                 <div data-bind="foreach: SelectedClassPeriod().MissedQuestions">
-                    <span data-bind="text: $data">
+                    <span data-bind="text: $data, click: $parent.RemoveQuestion">
                 </div>
-                <form onsubmit="return false" data-bind="submit: SubmitMissedQuestion">
-                    <p data-bind="text: IsMissedQuestionValid, visible: IsMissedQuestionValid() !== true" style="display:none"></p>
-                    <input type="number" min="0" data-bind="textInput: MissedQuestion"></input>
-                </form>
+                <p data-bind="text: IsMissedQuestionValid, visible: IsMissedQuestionValid() !== true" style="display:none"></p>
+                <input type="number" min="0" data-bind="textInput: MissedQuestion, enterkey: SubmitMissedQuestion"></input>
+                <button class="button" data-bind="click: TallyScores">Tally</button>
+                <div data-bind="foreach: Tallies">
+                    <p data-bind="visible:$data"><span data-bind="text: $index"></span>: <span data-bind="text: $data"></span></p>
+                </div>
             </div>
         </div>
     </div>
