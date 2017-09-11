@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>TeStatistics</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css" integrity="sha256-itWEYdFWzZPBG78bJOOiQIn06QCgN/F0wMDcC4nOhxY="
+        crossorigin="anonymous" />
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+                <li class="menu-text">TeStatistics</li>
+            </ul>
+        </div>
+    </div>
+    <div class="grid-container">
+        <div>
+            <h1>Welcome to TeStatistics</h1>
+            <p>This site will provide you a statistical analysis of a test.</p>
+            <p>How many questions are on the test?</p>
+            <input type="number" min="0" data-bind="textInput: Questions" />
+        </div>
+        <ul class="tabs" data-tabs id="example-tabs">
+            <!-- ko foreach:ClassPeriods -->
+            <li class="tabs-title" data-bind="css: {'is-active': $data == SelectedClassPeriod()}, click: selectClassPeriod">
+                <a data-bind="text: Name, attr: {'aria-selected': $data == SelectedClassPeriod() }"></a>
+            </li>
+            <!-- /ko -->
+            <li class="tabs-title" data-bind="click: addClassPeriod">
+                <a>Add Class</a>
+            </li>
+        </ul>
+        <div class="tabs-content" data-tabs-content="example-tabs" data-bind="foreach:ClassPeriods">
+            <div class="tabs-panel" data-bind="css: {'is-active': $data == SelectedClassPeriod()}">
+                <input type="text" data-bind="textInput:Name" placeholder="Please enter a class name or period"></input>
+                <p>Type each question number missed, press enter after each entry.</p>
+                <div data-bind="foreach: SelectedClassPeriod().MissedQuestions">
+                    <span data-bind="text: $data">
+                </div>
+                <form onsubmit="return false" data-bind="submit: SubmitMissedQuestion">
+                    <p data-bind="text: IsMissedQuestionValid, visible: IsMissedQuestionValid() !== true" style="display:none"></p>
+                    <input type="number" min="0" data-bind="textInput: MissedQuestion"></input>
+                </form>
+            </div>
+        </div>
+    </div>
+        
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js" integrity="sha256-Nd2xznOkrE9HkrAMi4xWy/hXkQraXioBg9iYsBrcFrs="
+crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+        // $(document).foundation();
+    </script>
+    
+    <!-- My Scripts -->
+    <script src="index.js"></script>
+</body>
+</html>
