@@ -29,7 +29,7 @@ var MainViewModel = function(){
         }
     }
 
-    function TallyScores(missedQs){
+    function tallyScores(missedQs){
         var rtn = [];
         
         missedQs.forEach(function(q) {
@@ -45,10 +45,42 @@ var MainViewModel = function(){
     }
 
     self.Questions = ko.observable(10);
+    self.QuestionsArray = ko.pureComputed(function(){
+        function QuestionButton(index){
+            var that = this;
+            that.Number = index+1;
+            that.Value = ko.observable(false);
+            that.toggle = function () { that.Value(!that.Value()); }
+        }
+
+        var numberOfQuestions = self.Questions(),
+            rtn = [];
+
+        for(var i=0; i<numberOfQuestions; i++){
+            rtn[i] = new QuestionButton(i);
+        }
+        return rtn;
+    });
+    self.submitMultipleQuestions = function(){
+        var questions = self.QuestionsArray();
+            selectedQs = questions.filter(function(q){
+                return q.Value();
+            }),
+            c = self.SelectedClassPeriod(),
+            qs = c.MissedQuestions;
+
+        selectedQs.forEach(function(q){
+            qs.push(q.Number);
+            q.toggle();
+        });
+
+        self.tallyScores();
+    }
+
     self.ClassPeriods = ko.observableArray();
     self.SelectedClassPeriod = ko.observable();
     self.SelectedClassPeriod.subscribe(function (classPeriod){
-        classPeriod.Tallies(TallyScores(classPeriod.MissedQuestions()));
+        classPeriod.Tallies(tallyScores(classPeriod.MissedQuestions()));
     })
     self.MissedQuestion = ko.observable();
 
@@ -82,10 +114,10 @@ var MainViewModel = function(){
             self.MissedQuestion(undefined);
         }
     }
-    self.TallyScores = function(){
+    self.tallyScores = function(){
         var current = self.SelectedClassPeriod();
         if(current){
-            current.Tallies(TallyScores(current.MissedQuestions()));
+            current.Tallies(tallyScores(current.MissedQuestions()));
         }
     };
 
