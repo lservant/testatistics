@@ -14,37 +14,27 @@ ko.bindingHandlers.enterkey = {
 
 var MainViewModel = function(){
     var self = this;
+    
+    function createToggle(name,initial){
+        self[name] = ko.observable(initial);
+        self['toggle'+name] = function(){ self[name](!self[name]()); }
+    }
 
-    function ClassPeriod(){
-        var that = this;
-        that.Name = ko.observable("New Hour");
-        that.NumberOfStudents = ko.observable(1);
-        that.MissedQuestions = ko.observableArray();
-        that.Tallies = ko.observable();
+    createToggle('ShowSetup', true);
+    createToggle('ShowDataEntry', false);
+    createToggle('ShowResults', false);
 
-        that.RemoveQuestion = function(question){
-            var removed = that.MissedQuestions.remove(question); // remove all who match the number
-            removed.forEach(function(r){ that.MissedQuestions.unshift(r); }); // put them in front
-            that.MissedQuestions.shift(); // knock one off
+    self.Questions = ko.observable(0);
+    self.Questions.subscribe(function(num){
+        if(num <= 0){
+            self.ShowSetup(true);
+            self.ShowDataEntry(false);
+            self.ShowResults(false);
+        }else{
+            self.ShowDataEntry(true);
+            self.ShowResults(false);
         }
-    }
-
-    function tallyScores(missedQs){
-        var rtn = [];
-        
-        missedQs.forEach(function(q) {
-            if(rtn[q] == undefined){
-                rtn[q] = 1;
-            }else{
-                rtn[q] += 1;
-            }
-        }, this);
-
-        console.log(rtn);
-        return rtn;
-    }
-
-    self.Questions = ko.observable(10);
+    })
     self.QuestionsArray = ko.pureComputed(function(){
         function QuestionButton(index){
             var that = this;
@@ -80,7 +70,7 @@ var MainViewModel = function(){
     self.ClassPeriods = ko.observableArray();
     self.SelectedClassPeriod = ko.observable();
     self.SelectedClassPeriod.subscribe(function (classPeriod){
-        classPeriod.Tallies(tallyScores(classPeriod.MissedQuestions()));
+        classPeriod.tallyScores();
     })
     self.MissedQuestion = ko.observable();
 
@@ -117,10 +107,9 @@ var MainViewModel = function(){
     self.tallyScores = function(){
         var current = self.SelectedClassPeriod();
         if(current){
-            current.Tallies(tallyScores(current.MissedQuestions()));
+            current.tallyScores();
         }
-    };
-
+    }
     self.exportToCSV = function(){
         self.tallyScores();
         const rows = self.SelectedClassPeriod().Tallies();
@@ -134,6 +123,7 @@ var MainViewModel = function(){
         var encodedUri = encodeURI(csvContent);
         window.open(encodedUri);
     }
+
 
     self.addClassPeriod();
 }

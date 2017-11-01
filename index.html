@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>TeStatistics</title>
+    <title>TeStats</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css"/>
@@ -12,46 +12,51 @@
     <div class="top-bar">
         <div class="top-bar-left">
             <ul class="dropdown menu" data-dropdown-menu>
-                <li class="menu-text">TeStatistics</li>
+                <li class="menu-text">TeStats</li>
             </ul>
         </div>
     </div>
     <div class="grid-container">
         <div>
-            <h1>Welcome to TeStatistics</h1>
+            <h1>Welcome to TeStats</h1>
             <p>This site will provide you a statistical analysis of a test.</p>
-            <p>How many questions are on the test?</p>
-            <input type="number" min="0" data-bind="textInput: Questions" />
+            <div data-bind="visible: ShowSetup">
+                <p>How many questions are on the test?</p>
+                <input type="number" min="0" data-bind="textInput: Questions" />
+            </div>
         </div>
-        <ul class="tabs" data-tabs id="example-tabs">
-            <!-- ko foreach:ClassPeriods -->
-            <li class="tabs-title" data-bind="css: {'is-active': $data == SelectedClassPeriod()}, click: selectClassPeriod">
-                <a data-bind="text: Name, attr: {'aria-selected': $data == SelectedClassPeriod() }"></a>
-            </li>
-            <!-- /ko -->
-            <li class="tabs-title" data-bind="click: addClassPeriod">
-                <a>Add Class</a>
-            </li>
-        </ul>
-        <div class="tabs-content" data-tabs-content="example-tabs" data-bind="foreach:ClassPeriods">
-            <div class="tabs-panel" data-bind="css: {'is-active': $data == SelectedClassPeriod()}">
-                <input type="text" data-bind="textInput:Name" placeholder="Please enter a class name or period"></input>
-                <p>For each test, toggle the questions marked incorrect. When finished, press submit to enter the missed questions.</p>
-                <div data-bind="foreach: SelectedClassPeriod().MissedQuestions">
-                    <span data-bind="text: $data, click: $parent.RemoveQuestion">
-                </div>
-                <div data-bind="foreach: QuestionsArray">
-                    <a class="button large secondary" data-bind="click:toggle, text:Number, css: {hollow: !Value()}"></a>
-                </div>
-                <a class="button" data-bind="click: submitMultipleQuestions">Submit</a>
+        <button class="button" data-bind="click: toggleShowDataEntry"><span data-bind="text: ShowDataEntry() ? 'Hide' : 'Show'"></span> Data Entry</button>
+        <div data-bind="visible: ShowDataEntry">
+            <ul class="tabs" data-tabs id="example-tabs">
+                <!-- ko foreach:ClassPeriods -->
+                <li class="tabs-title" data-bind="css: {'is-active': $data == SelectedClassPeriod()}, click: selectClassPeriod">
+                    <a data-bind="text: Name, attr: {'aria-selected': $data == SelectedClassPeriod() }"></a>
+                </li>
+                <!-- /ko -->
+                <li class="tabs-title" data-bind="click: addClassPeriod">
+                    <a>Add Class</a>
+                </li>
+            </ul>
+            <div class="tabs-content" data-tabs-content="example-tabs" data-bind="foreach:ClassPeriods">
+                <div class="tabs-panel" data-bind="css: {'is-active': $data == SelectedClassPeriod()}">
+                    <input type="text" data-bind="textInput:Name" placeholder="Please enter a class name or period"></input>
+                    <p>For each test, toggle the questions marked incorrect. When finished, press submit to enter the missed questions.</p>
+                    <div data-bind="foreach: SelectedClassPeriod().MissedQuestions">
+                        <span data-bind="text: $data, click: $parent.RemoveQuestion">
+                    </div>
+                    <div data-bind="foreach: QuestionsArray">
+                        <a class="button large secondary" data-bind="click:toggle, text:Number, css: {hollow: !Value()}"></a>
+                    </div>
+                    <a class="button" data-bind="click: submitMultipleQuestions">Submit</a>
 
-                <p>Type each question number missed, press enter after each entry. If you make a mistake, click the number to remove it.</p>
-                <p data-bind="text: IsMissedQuestionValid, visible: IsMissedQuestionValid() !== true" style="display:none"></p>
-                <input type="number" min="0" data-bind="textInput: MissedQuestion, enterkey: SubmitMissedQuestion"></input>
-                <button class="button" data-bind="click: tallyScores">Tally</button>
-                <button class="button" data-bind="click: exportToCSV">Export to CSV</button>
-                <div data-bind="foreach: Tallies">
-                    <p data-bind="visible:$data"><span data-bind="text: $index"></span>: <span data-bind="text: $data"></span></p>
+                    <p>Type each question number missed, press enter after each entry. If you make a mistake, click the number to remove it.</p>
+                    <p data-bind="text: IsMissedQuestionValid, visible: IsMissedQuestionValid() !== true" style="display:none"></p>
+                    <input type="number" min="0" data-bind="textInput: MissedQuestion, enterkey: SubmitMissedQuestion"></input>
+                    <button class="button" data-bind="click: tallyScores">Tally</button>
+                    <button class="button" data-bind="click: exportToCSV">Export to CSV</button>
+                    <div data-bind="foreach: Tallies">
+                        <p data-bind="visible:$data"><span data-bind="text: $index"></span>: <span data-bind="text: $data"></span></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -67,6 +72,8 @@
     </script>
     
     <!-- My Scripts -->
+
+    <script src="models/ClassPeriod.js"></script>
     <script src="index.js"></script>
 </body>
 </html>
