@@ -121,6 +121,20 @@ var MainViewModel = function(){
         }
     };
 
+    self.exportToCSV = function(){
+        self.tallyScores();
+        const rows = self.SelectedClassPeriod().Tallies();
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += 'Question,Marks\n'
+        rows.forEach(function (data,index) {
+            let row = index + ',' + data;
+            csvContent += row + "\n";
+        });
+
+        var encodedUri = encodeURI(csvContent);
+        window.open(encodedUri);
+    }
+
     self.addClassPeriod();
 }
 ko.applyBindings(MainViewModel);

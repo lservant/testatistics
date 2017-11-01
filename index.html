@@ -5,8 +5,7 @@
     <title>TeStatistics</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css" integrity="sha256-itWEYdFWzZPBG78bJOOiQIn06QCgN/F0wMDcC4nOhxY="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css"/>
 </head>
 
 <body>
@@ -50,6 +49,7 @@
                 <p data-bind="text: IsMissedQuestionValid, visible: IsMissedQuestionValid() !== true" style="display:none"></p>
                 <input type="number" min="0" data-bind="textInput: MissedQuestion, enterkey: SubmitMissedQuestion"></input>
                 <button class="button" data-bind="click: tallyScores">Tally</button>
+                <button class="button" data-bind="click: exportToCSV">Export to CSV</button>
                 <div data-bind="foreach: Tallies">
                     <p data-bind="visible:$data"><span data-bind="text: $index"></span>: <span data-bind="text: $data"></span></p>
                 </div>
@@ -60,8 +60,7 @@
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js" integrity="sha256-Nd2xznOkrE9HkrAMi4xWy/hXkQraXioBg9iYsBrcFrs="
-crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script>
         // $(document).foundation();
